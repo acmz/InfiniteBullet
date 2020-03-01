@@ -119,7 +119,7 @@ public class EnemyDirector : MonoBehaviour {
                 float generateXPos = float.Parse(generateParameter[(int)GenerateEnemyProperty.xPos]);
                 float generateYPos = float.Parse(generateParameter[(int)GenerateEnemyProperty.yPos]);
 
-                GenerateEnemy(generateType, generateXPos, generateYPos);
+                //GenerateEnemy(generateType, generateXPos, generateYPos);
                 this.thisWaveEnemyPatternIndex++;
 
             }

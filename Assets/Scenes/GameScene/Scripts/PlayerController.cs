@@ -16,13 +16,19 @@ public class PlayerController : MonoBehaviour {
     private const float WINDOW_LIMIT_TOP = 4.6f;
     private const float WINDOW_LIMIT_BOTTOM = -3.6f;
 
+    private GameObject gameDirectorObj;
+
     // Use this for initialization
     void Start () {
         playerBody = GetComponent<Rigidbody2D>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+        //GameDirectorと連携
+        this.gameDirectorObj = GameObject.Find("GameDirector");
+
+    }
+
+    // Update is called once per frame
+    void Update () {
 
         //自機の移動
         int keyLfRi = 0;
@@ -52,6 +58,11 @@ public class PlayerController : MonoBehaviour {
         playerVector2.y = keyUpDw * PLAYER_MOVE_SPEED;
 
         this.playerBody.velocity = playerVector2;
+
+        //プレイヤー移動中はスコアを加算する
+        if(keyLfRi != 0 || keyUpDw != 0) {
+            this.gameDirectorObj.GetComponent<GameDirector>().ScorePlus();
+        }
 
     }
 

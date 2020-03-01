@@ -7,16 +7,16 @@ public class GameDirector : MonoBehaviour {
 
     //自機の弾数表示
     private GameObject pBulletNum;
-    private int pBulletStock = 0;
+    private int pBulletStock = 999999999;
     public int PBulletStock {
         get {
             return pBulletStock;
         }
     }
-    private const string P_BULLET_NUM_MSG = "Bullet × ";
+    private const string P_BULLET_NUM_MSG = "Bullet × ∞";
 
     //自機の最大所持弾数
-    private const int P_BULLET_MAX = 10;
+    private const int P_BULLET_MAX = 999999999;
 
     //スコア表示
     private GameObject scoreNum;
@@ -59,12 +59,15 @@ public class GameDirector : MonoBehaviour {
     //コルーチン（処理停止）制御フラグ
     private bool isSleeping = false;
 
+    //ゲーム終了フラグ
+    private bool isGameEnd = false;
+
     // Use this for initialization
     void Start () {
 
         //残弾数UI取得、初期化
         this.pBulletNum = GameObject.Find("P_Bullet_Num");
-        this.PBulletNumView(this.pBulletStock);
+        //this.PBulletNumView(this.pBulletStock);
 
         //残り時間UI取得、初期化
         this.timeLeftUI = GameObject.Find("TimeLeft");
@@ -75,7 +78,7 @@ public class GameDirector : MonoBehaviour {
         this.ScoreReset();
 
         //Wave数初期化
-        this.WaveNumInit();
+        //this.WaveNumInit();
 
         //Game開始
         this.isWaveInit = true;
@@ -97,9 +100,15 @@ public class GameDirector : MonoBehaviour {
             //残り時間を減らす
             this.TimeLeftMinus();
 
-            //残り時間が0になったら、次のWaveへ。
-            if (this.timeLeft <= 0f) {
-                this.isWaveInit = true;
+            //残り時間が0になったら、次のWaveへ進む。
+            //if(this.timeLeft <= 0f) {
+            //this.isWaveInit = true;
+            //}
+
+            //残り時間が0になったら、ゲーム終了。スコアボードを表示する。
+            if(this.timeLeft <= 0f && !this.isGameEnd) {
+                this.isGameEnd = true;
+                naichilab.RankingLoader.Instance.SendScoreAndShowRanking(100);
             }
 
         }
@@ -117,12 +126,12 @@ public class GameDirector : MonoBehaviour {
         this.isSleeping = true;
 
         //残弾数回復
-        while (this.pBulletStock < P_BULLET_MAX) {
+        //while (this.pBulletStock < P_BULLET_MAX) {
 
-            yield return new WaitForSeconds(inTime);
-            this.PBulletNumPlus();
+        //    yield return new WaitForSeconds(inTime);
+        //    this.PBulletNumPlus();
 
-        }
+        //}
 
         //残り時間初期化
         yield return new WaitForSeconds(inTime);
@@ -145,7 +154,7 @@ public class GameDirector : MonoBehaviour {
         this.pBulletStock++;
 
         //表示更新
-        this.PBulletNumView(this.pBulletStock);
+        //this.PBulletNumView(this.pBulletStock);
 
     }
 
@@ -156,17 +165,17 @@ public class GameDirector : MonoBehaviour {
         this.pBulletStock -= 1;
 
         //表示更新
-        this.PBulletNumView(this.pBulletStock);
+        //this.PBulletNumView(this.pBulletStock);
 
     }
 
     //残弾数表示
-    private void PBulletNumView(int inBulletNum) {
+    //private void PBulletNumView(int inBulletNum) {
 
-        //残弾数表示を更新
-        this.pBulletNum.GetComponent<Text>().text = P_BULLET_NUM_MSG + inBulletNum;
+    //    //残弾数表示を更新
+    //    this.pBulletNum.GetComponent<Text>().text = P_BULLET_NUM_MSG + inBulletNum;
 
-    }
+    //}
 
     //敵撃破数初期化
     public void EnemyDestroyNumReset() {
@@ -199,6 +208,17 @@ public class GameDirector : MonoBehaviour {
         //スコア加算
         this.score += inScore * this.enemyDestroyNum;
 
+        //表示更新
+        this.ScoreView(this.score);
+
+    }
+
+    //スコア加算
+    public void ScorePlus() {
+
+        //スコア加算
+        this.score++;
+        Debug.Log("scoreup");
         //表示更新
         this.ScoreView(this.score);
 
