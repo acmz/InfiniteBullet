@@ -75,6 +75,9 @@ public class PlayerController : MonoBehaviour {
             //自分自身を消す
             Destroy(gameObject);
 
+            //GameDirectorに死亡したことを通知する
+            this.gameDirectorObj.GetComponent<GameDirector>().PlayerIsDead();
+
         }
 
     }

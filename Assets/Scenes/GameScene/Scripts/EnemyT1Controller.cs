@@ -14,13 +14,18 @@ public class EnemyT1Controller : MonoBehaviour {
     //敵のレベル設定
     private const int ENEMY_LEVEL = 5;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Use this for initialization
+    void Start () {
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        //ゲームが終了したら何もしない。
+        //if(this.gameDirectorObj.GetComponent<GameDirector>().IsGameEnd) {
+        //    return;
+        //}
 
         //敵弾発射
         this.shootTime += Time.deltaTime;

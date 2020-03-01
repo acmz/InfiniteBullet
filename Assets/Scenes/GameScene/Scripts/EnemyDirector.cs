@@ -88,8 +88,8 @@ public class EnemyDirector : MonoBehaviour {
         }
 
         //GameDirectorから現在のWave数を取得
-        Debug.Log("currentWaveNum : " + this.currentWaveNum);
-        Debug.Log("WaveNum : " + this.gameDirectorObj.GetComponent<GameDirector>().WaveNum);
+        //Debug.Log("currentWaveNum : " + this.currentWaveNum);
+        //Debug.Log("WaveNum : " + this.gameDirectorObj.GetComponent<GameDirector>().WaveNum);
         if (this.currentWaveNum < this.gameDirectorObj.GetComponent<GameDirector>().WaveNum) {
 
             //現在のWaveの敵生成パターンリストを取得する。
@@ -119,7 +119,7 @@ public class EnemyDirector : MonoBehaviour {
                 float generateXPos = float.Parse(generateParameter[(int)GenerateEnemyProperty.xPos]);
                 float generateYPos = float.Parse(generateParameter[(int)GenerateEnemyProperty.yPos]);
 
-                //GenerateEnemy(generateType, generateXPos, generateYPos);
+                GenerateEnemy(generateType, generateXPos, generateYPos);
                 this.thisWaveEnemyPatternIndex++;
 
             }

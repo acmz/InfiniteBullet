@@ -38,7 +38,7 @@ public class GameDirector : MonoBehaviour {
 
     //残り時間
     private GameObject timeLeftUI;
-    private const float LIMIT_TIME = 10.0f;
+    private const float LIMIT_TIME = 30.0f;
     private const string TIME_LEFT_MSG = "Time : ";
     private const string TIME_LEFT_FORMAT = "F2";
     private float timeLeft = 0f;
@@ -48,6 +48,9 @@ public class GameDirector : MonoBehaviour {
         }
     }
 
+    //1秒あたりのスコア
+    private float TIME_SCORE_BASE = 500.0f;
+
     //Wave開始コントロールフラグ
     private bool isWaveInit = false;
     public bool IsWaveInit {
@@ -56,11 +59,22 @@ public class GameDirector : MonoBehaviour {
         }
     }
 
+    //ゲーム終了フラグ
+    private bool isGameEnd = false;
+    public bool IsGameEnd {
+        get {
+            return IsGameEnd;
+        }
+    }
+
     //コルーチン（処理停止）制御フラグ
     private bool isSleeping = false;
 
-    //ゲーム終了フラグ
-    private bool isGameEnd = false;
+    //スコアボード表示フラグ
+    private bool displayScoreBord = false;
+
+    //プレイヤー死亡フラグ
+    private bool playerIsDead = false;
 
     // Use this for initialization
     void Start () {
@@ -82,6 +96,8 @@ public class GameDirector : MonoBehaviour {
 
         //Game開始
         this.isWaveInit = true;
+        this.displayScoreBord = false;
+        this.playerIsDead = false;
 
     }
 
@@ -96,20 +112,37 @@ public class GameDirector : MonoBehaviour {
 
         } else {
 
+            //残り時間が0になったら、ゲーム終了。
+            if(this.timeLeft <= 0f && !this.isGameEnd) {
+                this.isGameEnd = true;
+            }
+
+            //自機がやられたらゲーム終了
+            if(this.playerIsDead && !this.isGameEnd){
+
+                this.isGameEnd = true;
+                //残り時間をスコアに換算する
+                this.ScorePlus(this.timeLeft);
+
+            }
+
             //Wave開始後
-            //残り時間を減らす
-            this.TimeLeftMinus();
+            if(!this.isGameEnd) {
+                //ゲーム中は残り時間を減らす
+                this.TimeLeftMinus();
+                return;
+            }
+
+            //ゲームが終わったらスコアボードを表示する
+            if(!this.displayScoreBord) {
+                this.displayScoreBord = true;
+                naichilab.RankingLoader.Instance.SendScoreAndShowRanking(this.score);
+            }
 
             //残り時間が0になったら、次のWaveへ進む。
             //if(this.timeLeft <= 0f) {
             //this.isWaveInit = true;
             //}
-
-            //残り時間が0になったら、ゲーム終了。スコアボードを表示する。
-            if(this.timeLeft <= 0f && !this.isGameEnd) {
-                this.isGameEnd = true;
-                naichilab.RankingLoader.Instance.SendScoreAndShowRanking(100);
-            }
 
         }
 
@@ -158,7 +191,7 @@ public class GameDirector : MonoBehaviour {
 
     }
 
-    //残弾数現象
+    //残弾数減少
     public void PBulletNumMinus() {
 
         //残弾数を減少
@@ -202,7 +235,7 @@ public class GameDirector : MonoBehaviour {
 
     }
 
-    //スコア加算
+    //スコア加算(敵撃破時)
     public void ScorePlus(int inScore) {
 
         //スコア加算
@@ -213,12 +246,29 @@ public class GameDirector : MonoBehaviour {
 
     }
 
-    //スコア加算
+    //スコア加算(プレイヤー移動時)
     public void ScorePlus() {
+
+        //ゲーム終了後は加算しない
+        if(this.isGameEnd) {
+            return;
+        }
 
         //スコア加算
         this.score++;
         Debug.Log("scoreup");
+        //表示更新
+        this.ScoreView(this.score);
+
+    }
+
+    //スコア加算(残り時間)
+    public void ScorePlus(float inTime) {
+
+        //スコア加算
+        float timeScore = inTime * this.TIME_SCORE_BASE;
+        this.score += (int)timeScore;
+        //Debug.Log("scoreup");
         //表示更新
         this.ScoreView(this.score);
 
@@ -288,4 +338,8 @@ public class GameDirector : MonoBehaviour {
 
     }
 
+    //プレイヤー死亡判定
+    public void PlayerIsDead() {
+        this.playerIsDead = true;
+    }
 }

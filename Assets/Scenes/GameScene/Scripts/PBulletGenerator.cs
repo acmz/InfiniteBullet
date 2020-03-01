@@ -7,16 +7,27 @@ public class PBulletGenerator : MonoBehaviour {
     public GameObject pBulletPrefab;
     private const float P_BULLET_POS_SET = 1.1f;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+    //Directorと連携
+    //private GameObject gameDirectorObj;
+
+    // Use this for initialization
+    void Start () {
+
+        //Directorと連携
+        //this.gameDirectorObj = GameObject.Find("GameDirector");
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        //ゲームが終了したら何もしない。
+        //if(this.gameDirectorObj.GetComponent<GameDirector>().IsGameEnd) {
+        //    return;
+        //}
+
         //スペースキーで弾発射
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if(Input.GetKeyDown(KeyCode.Space)) {
 
             //GameDirectorと連携
             GameObject gameDirectorObj = GameObject.Find("GameDirector");

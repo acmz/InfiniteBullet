@@ -16,11 +16,18 @@ public class EnemyT2Controller : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        //ゲームが終了したら何もしない。
+        //Directorと連携
+        //GameObject gameDirectorObj = GameObject.Find("GameDirector");
+        //if(gameDirectorObj.GetComponent<GameDirector>().IsGameEnd) {
+        //    return;
+        //}
 
         //敵弾発射
         this.shootTime += Time.deltaTime;
